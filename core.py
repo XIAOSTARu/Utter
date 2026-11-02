@@ -41,16 +41,16 @@ class Dialogue:
             Role(2): Role(1),
         })
 # 将Dialogue列表转为标准OpenAI格式列表
-def to_messages(dialogues, *, role_map=None, handle=lambda d, role, content: None):
+def to_messages(dialogues, *, role_map=None, handle=lambda d: None):
     result = []
     if role_map is None:
         role_map = {1: "user", 2: "assistant"}
     for d in dialogues:
         if not d.enable:
             continue
+        handle(d)
         role = role_map.get(d.role.role, "system")
         content = d.text
-        handle(d, role, content)
         result.append({
             "role": role,
             "content": content
